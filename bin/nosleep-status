@@ -1,0 +1,16 @@
+#!/bin/bash
+# Reports whether both halves of keep-awake are active.
+#   pmset disablesleep  -> survives closing the lid
+#   caffeinate child    -> blocks idle sleep
+app_pid=$(pgrep -x NoSleep || true)
+disabled=$(pmset -g | awk '/SleepDisabled/{print $2}')
+caff=""
+[[ -n "$app_pid" ]] && caff=$(pgrep -P "$app_pid" || true)
+
+[[ "$disabled" == "1" ]] && echo "pmset disablesleep : ON" || echo "pmset disablesleep : off"
+if [[ -n "$caff" ]]; then
+  echo "caffeinate         : ON (pid $caff, owned by NoSleep $app_pid)"
+else
+  echo "caffeinate         : off$([[ -z "$app_pid" ]] && echo ' (NoSleep not running)')"
+fi
+[[ -f /tmp/.nosleep_active ]] && echo "shell state file   : present" || echo "shell state file   : absent"

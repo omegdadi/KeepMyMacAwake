@@ -1,0 +1,7 @@
+# Allows the menu bar toggle and the shell helper to flip the lid-close sleep
+# setting without a password prompt. Scoped to this one command, no wildcards
+# beyond the 0/1 argument.
+# Install with:
+#   sudo install -m 0440 -o root -g wheel sudoers.d/nosleep /etc/sudoers.d/nosleep
+# Replace USERNAME with your short user name (`id -un`).
+USERNAME ALL=(root) NOPASSWD: /usr/bin/pmset disablesleep 0, /usr/bin/pmset disablesleep 1
